@@ -62,8 +62,11 @@ for attack_name in attacks:
     # sending_port = proto_to_port[proto]
     
     
-    # In case some UDP server (e.g., TFTP server) will use random port to send response, use the following filter to get rid of these servers
-    # replace the output-filter with ''' --output-filter=\"sport=" + str(proto_to_port[proto]) + " && success=1 && repeat=0\" \\\n\ '''
+    # one could use the following output filter:
+    # --output-fields=\"saddr,sport,dport,data\" \\\n\
+    # --output-filter=\"sport=" + str(proto_to_port[proto]) + " && dport=" + str(sending_port) + " && success=1 && repeat=0\" \\\n\
+    # In case some UDP server (e.g., TFTP server) will use random port to send response.
+
         # ----------------------- PROBE IPS W/ ATTACK PACKET -----------------------
         scan_script_str = "#!/usr/bin/env bash\n\
 WHITELIST=allowlist_" + proto + ".txt\n\
@@ -116,7 +119,7 @@ set -o pipefail &&\n\
         if DEBUG: logging.debug("FINISHED: read csv into pandas dataframe.")
         zmap_df['attack_name'] = attack_name
         zmap_df['index'] = str(index)
-
+        # zmap_df = zmap_df.drop(['sport','dport'],axis=1)
         if DEBUG: logging.debug("FINISHED: add attack column to csv.")
         zmap_df.to_csv(csv_path, index=False)
         if DEBUG: logging.debug("FINISHED: convert dataframe back to csv.\n")
