@@ -6,7 +6,7 @@ Postgresql:
     user_name: scan
 
 Zmap
-
+Scapy 2.5.0
 
 #### STEP 1: Discovery Probe
 1. prepare the scan allowlist (a list of all server IPs running certain protocol).
